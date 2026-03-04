@@ -110,7 +110,7 @@ describe('Parser Tests', () => {
       expect(() => parse("3 +")).toThrow();
       expect(() => parse("+ 3")).toThrow();
       expect(() => parse("3 + + 4")).toThrow();
-      expect(() => parse("3.5")).toThrow(); // Only integers are supported
+      expect(parse("3.5")).toBe(3.5);
     });
 
     test('should handle incomplete expressions', () => {
@@ -127,5 +127,25 @@ describe('Parser Tests', () => {
       expect(parse("7 - 5 - 1")).toBe(1);
     });
   });
+  
+  const parser = require('../src/parser')
+
+  test('ignores single line comments', () => {
+    expect(parser.parse("2+3 // comment")).toBe(5)
+  })
+
+  test('parses float number', () => {
+    expect(parser.parse("2.5+3")).toBe(5.5)
+  })
+
+  test('parses scientific notation', () => {
+    expect(parser.parse("2.5e2")).toBe(250)
+  })
+
+  test('parses scientific notation with minus', () => {
+    expect(parser.parse("2.5e-2")).toBe(0.025)
+  })
+
+
 
 });
